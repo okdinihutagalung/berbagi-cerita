@@ -45,6 +45,28 @@ export async function getAllStories() {
   });
 }
 
+export async function deleteStory(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORIES_STORE, 'readwrite');
+    const store = tx.objectStore(STORIES_STORE);
+    const req = store.delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function clearStories() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORIES_STORE, 'readwrite');
+    const store = tx.objectStore(STORIES_STORE);
+    const req = store.clear();
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
 export async function addPendingStory(data) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
