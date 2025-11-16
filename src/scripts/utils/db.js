@@ -1,7 +1,8 @@
 const DB_NAME = 'storyshare-db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORIES_STORE = 'stories';
 const PENDING_STORE = 'pendingStories';
+const FAVORITES_STORE = 'favorites';
 
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -14,6 +15,9 @@ function openDB() {
       }
       if (!db.objectStoreNames.contains(PENDING_STORE)) {
         db.createObjectStore(PENDING_STORE, { keyPath: 'tempId', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains(FAVORITES_STORE)) {
+        db.createObjectStore(FAVORITES_STORE, { keyPath: 'id' });
       }
     };
 
@@ -95,6 +99,50 @@ export async function deletePendingStory(tempId) {
     const tx = db.transaction(PENDING_STORE, 'readwrite');
     const store = tx.objectStore(PENDING_STORE);
     const req = store.delete(tempId);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function addFavorite(story) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(FAVORITES_STORE, 'readwrite');
+    const store = tx.objectStore(FAVORITES_STORE);
+    const req = store.put(story);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function getAllFavorites() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(FAVORITES_STORE, 'readonly');
+    const store = tx.objectStore(FAVORITES_STORE);
+    const req = store.getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function deleteFavorite(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(FAVORITES_STORE, 'readwrite');
+    const store = tx.objectStore(FAVORITES_STORE);
+    const req = store.delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function clearFavorites() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(FAVORITES_STORE, 'readwrite');
+    const store = tx.objectStore(FAVORITES_STORE);
+    const req = store.clear();
     req.onsuccess = () => resolve();
     req.onerror = () => reject(req.error);
   });

@@ -1,6 +1,6 @@
 import { getStories } from '../apis/story-api.js';
 import { Auth } from '../utils/auth.js';
-import { saveStories, getAllStories } from '../utils/db.js';
+import { saveStories, getAllStories, addFavorite, deleteFavorite, getAllFavorites } from '../utils/db.js';
 
 const HomePage = {
   async render(){
@@ -46,6 +46,9 @@ const HomePage = {
     }catch(e){
       list = await getAllStories();
     }
+    const favorites = await getAllFavorites();
+    const favoriteIds = new Set(favorites.map((st) => st.id));
+
     const listEl = document.getElementById('stories');
     if(list.length === 0){
       listEl.innerHTML = '<p class="small">Belum ada story dengan lokasi. Coba login dan tambah story.</p>';
@@ -62,13 +65,17 @@ const HomePage = {
         const item = document.createElement('article');
         item.className = 'card story-item';
         item.tabIndex = 0;
+        const isFav = favoriteIds.has(st.id);
         item.innerHTML = `
           <img src="${st.photoUrl}" alt="Foto cerita oleh ${st.name}" />
           <div>
             <h2>${st.name}</h2>
             <p class="small">${new Date(st.createdAt).toLocaleString()}</p>
             <p>${st.description.slice(0,140)}</p>
-            <button data-id="${st.id}" class="view-btn">Detail</button>
+            <div class="actions">
+              <button data-id="${st.id}" class="view-btn">Detail</button>
+              <button data-id="${st.id}" class="bookmark-btn">${isFav ? 'Hapus Simpan' : 'Simpan'}</button>
+            </div>
           </div>
         `;
         listEl.appendChild(item);
@@ -82,6 +89,22 @@ const HomePage = {
           });
           item.addEventListener('keydown', (e)=>{
             if(e.key === 'Enter') { marker.openPopup(); map.setView([st.lat, st.lon], 8); }
+          });
+        }
+
+        const bookmarkBtn = item.querySelector('.bookmark-btn');
+        if (bookmarkBtn) {
+          bookmarkBtn.addEventListener('click', async () => {
+            const id = st.id;
+            if (favoriteIds.has(id)) {
+              await deleteFavorite(id);
+              favoriteIds.delete(id);
+              bookmarkBtn.textContent = 'Simpan';
+            } else {
+              await addFavorite(st);
+              favoriteIds.add(id);
+              bookmarkBtn.textContent = 'Hapus Simpan';
+            }
           });
         }
       });

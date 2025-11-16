@@ -1,11 +1,11 @@
-import { getAllStories, deleteStory, clearStories } from '../utils/db.js';
+import { getAllFavorites, deleteFavorite, clearFavorites } from '../utils/db.js';
 
 const SavedPage = {
   async render(){
     return `
       <section class="card" aria-labelledby="saved-title">
-        <h1 id="saved-title">Story Tersimpan (Offline)</h1>
-        <p class="small">Halaman ini menampilkan data story yang tersimpan di IndexedDB untuk penggunaan offline.</p>
+        <h1 id="saved-title">Story Tersimpan (Bookmark)</h1>
+        <p class="small">Halaman ini menampilkan daftar story yang kamu simpan secara manual ke IndexedDB.</p>
         <div class="toolbar">
           <button type="button" id="clear-saved">Hapus Semua</button>
         </div>
@@ -18,9 +18,9 @@ const SavedPage = {
     const clearBtn = document.getElementById('clear-saved');
 
     const renderList = async () => {
-      const list = await getAllStories();
+      const list = await getAllFavorites();
       if (!list.length) {
-        listEl.innerHTML = '<p class="small">Belum ada story tersimpan. Buka halaman Home saat online untuk menyimpan data ke IndexedDB.</p>';
+        listEl.innerHTML = '<p class="small">Belum ada story tersimpan. Buka halaman Home lalu gunakan tombol Simpan pada story yang ingin kamu bookmark.</p>';
         return;
       }
       listEl.innerHTML = '';
@@ -41,7 +41,7 @@ const SavedPage = {
       listEl.querySelectorAll('.delete-saved').forEach((btn) => {
         btn.addEventListener('click', async () => {
           const id = btn.getAttribute('data-id');
-          await deleteStory(id);
+          await deleteFavorite(id);
           await renderList();
         });
       });
@@ -50,7 +50,7 @@ const SavedPage = {
     if (clearBtn) {
       clearBtn.addEventListener('click', async () => {
         if (!confirm('Hapus semua story tersimpan dari IndexedDB?')) return;
-        await clearStories();
+        await clearFavorites();
         await renderList();
       });
     }
