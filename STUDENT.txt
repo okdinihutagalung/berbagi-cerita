@@ -3,4 +3,4 @@ Project: StoryShare - Dicoding Submission
 Map: Leaflet (OpenStreetMap) - no API key
 API used: https://story-api.dicoding.dev/v1
 VAPID public key: BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk
-Deployment URL (GitHub Pages): https://okdinihutagalung.github.io/berbagi-cerita/
+Deployment URL (netlify): prismatic-cheesecake-c3878b.netlify.app
