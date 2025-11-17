@@ -1,11 +1,10 @@
 const CACHE_NAME = 'storyshare-shell-v1';
 const DATA_CACHE = 'storyshare-data-v1';
 const SHELL_ASSETS = [
-  '/',
-  '/index.html',
-  '/app.bundle.js',
-  '/manifest.webmanifest',
-  '/favicon.png'
+  './',
+  './index.html',
+  './manifest.webmanifest',
+  './favicon.png'
 ];
 
 self.addEventListener('install', (event) => {
@@ -48,7 +47,7 @@ self.addEventListener('fetch', (event) => {
 
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match('/index.html'))
+      fetch(request).catch(() => caches.match('./index.html'))
     );
     return;
   }
@@ -67,9 +66,9 @@ self.addEventListener('push', (event) => {
   const title = data.title || 'Story baru tersedia';
   const options = {
     body: data.body || data.message || 'Buka aplikasi untuk melihat cerita.',
-    icon: data.icon || '/favicon.png',
+    icon: data.icon || './favicon.png',
     data: {
-      url: data.url || '/',
+      url: data.url || './',
       storyId: data.storyId || null
     }
   };

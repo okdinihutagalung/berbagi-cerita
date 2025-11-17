@@ -4,10 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Story Share - Dicoding Submission</title>
-  <link rel="icon" href="/favicon.png" />
+  <meta name="theme-color" content="#0f766e" />
+  <link rel="icon" href="./favicon.png" />
+  <link rel="manifest" href="./manifest.webmanifest" />
   <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script type="module" crossorigin src="/assets/index-Bzv31btD.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script type="module" crossorigin src="/assets/index-DYtT46Z-.js"></script>
   <link rel="stylesheet" crossorigin href="/assets/index-UfPT79uT.css">
 </head>
 <body>
@@ -19,7 +21,10 @@
         <li><a href="#/" data-link>Home</a></li>
         <li><a href="#/add" data-link>Add Story</a></li>
         <li><a href="#/about" data-link>About</a></li>
+        <li><a href="#/saved" data-link>Saved (IndexedDB)</a></li>
         <li id="auth-links"></li>
+        <li><button id="install-btn" type="button" hidden>Install App</button></li>
+        <li><button id="push-toggle" type="button" hidden>Aktifkan Notifikasi</button></li>
       </ul>
     </nav>
   </header>
